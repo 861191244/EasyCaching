@@ -180,7 +180,7 @@
         /// <param name="vals"></param>
         /// <param name="expiration"></param>
         /// <returns></returns>        
-        bool HMSet(string cacheKey, Dictionary<string, string> vals, TimeSpan? expiration = null);
+        bool HMSet(string cacheKey, Dictionary<string, object> vals, TimeSpan? expiration = null);
         /// <summary>
         /// https://redis.io/commands/hset
         /// </summary>
@@ -188,7 +188,7 @@
         /// <param name="field"></param>
         /// <param name="cacheValue"></param>
         /// <returns></returns>
-        bool HSet(string cacheKey, string field, string cacheValue);
+        bool HSet(string cacheKey, string field, object cacheValue);
         /// <summary>
         /// https://redis.io/commands/hexists
         /// </summary>
@@ -209,13 +209,13 @@
         /// <param name="cacheKey"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        string HGet(string cacheKey, string field);
+        object HGet(string cacheKey, string field);
         /// <summary>
         /// https://redis.io/commands/hgetall
         /// </summary>
         /// <param name="cacheKey"></param>
         /// <returns></returns>
-        Dictionary<string, string> HGetAll(string cacheKey);
+        Dictionary<string, object> HGetAll(string cacheKey);
         /// <summary>
         /// https://redis.io/commands/hincrby
         /// </summary>
@@ -241,14 +241,14 @@
         /// </summary>
         /// <param name="cacheKey"></param>
         /// <returns></returns>
-        List<string> HVals(string cacheKey);
+        List<object> HVals(string cacheKey);
         /// <summary>
         /// https://redis.io/commands/hmget
         /// </summary>
         /// <param name="cacheKey"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-        Dictionary<string, string> HMGet(string cacheKey, IList<string> fields);
+        Dictionary<string, object> HMGet(string cacheKey, IList<string> fields);
         /// <summary>
         /// https://redis.io/commands/hset
         /// </summary>
@@ -256,7 +256,7 @@
         /// <param name="vals"></param>
         /// <param name="expiration"></param>
         /// <returns></returns>
-        Task<bool> HMSetAsync(string cacheKey, Dictionary<string, string> vals, TimeSpan? expiration = null);
+        Task<bool> HMSetAsync(string cacheKey, Dictionary<string, object> vals, TimeSpan? expiration = null);
         /// <summary>
         /// https://redis.io/commands/hset
         /// </summary>
@@ -264,7 +264,7 @@
         /// <param name="field"></param>
         /// <param name="cacheValue"></param>
         /// <returns></returns>
-        Task<bool> HSetAsync(string cacheKey, string field, string cacheValue);
+        Task<bool> HSetAsync(string cacheKey, string field, object cacheValue);
         /// <summary>
         /// https://redis.io/commands/hexists
         /// </summary>
@@ -285,13 +285,13 @@
         /// <param name="cacheKey"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        Task<string> HGetAsync(string cacheKey, string field);
+        Task<object> HGetAsync(string cacheKey, string field);
         /// <summary>
         /// https://redis.io/commands/hgetall
         /// </summary>
         /// <param name="cacheKey"></param>
         /// <returns></returns>
-        Task<Dictionary<string, string>> HGetAllAsync(string cacheKey);
+        Task<Dictionary<string, object>> HGetAllAsync(string cacheKey);
         /// <summary>
         /// https://redis.io/commands/hincrby
         /// </summary>
@@ -317,14 +317,14 @@
         /// </summary>
         /// <param name="cacheKey"></param>
         /// <returns></returns>
-        Task<List<string>> HValsAsync(string cacheKey);
+        Task<List<object>> HValsAsync(string cacheKey);
         /// <summary>
         /// https://redis.io/commands/hmget
         /// </summary>
         /// <param name="cacheKey"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-        Task<Dictionary<string, string>> HMGetAsync(string cacheKey, IList<string> fields);
+        Task<Dictionary<string, object>> HMGetAsync(string cacheKey, IList<string> fields);
         #endregion
 
         #region List
@@ -917,5 +917,9 @@
         /// <returns></returns>
         Task<List<(double longitude, double latitude)?>> GeoPosAsync(string cacheKey, List<string> members);
         #endregion
+
+        object Eval(string script, string cacheKey, List<object> args);
+
+        Task<object> EvalAsync(string script, string cacheKey, List<object> args);
     }
 }

@@ -9,7 +9,7 @@
 
     public partial class DefaultCSRedisCachingProvider : IRedisCachingProvider
     {
-        public bool HMSet(string cacheKey, Dictionary<string, string> vals, TimeSpan? expiration = null)
+        public bool HMSet(string cacheKey, Dictionary<string, object> vals, TimeSpan? expiration = null)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNull(vals, nameof(vals));
@@ -28,7 +28,7 @@
             return flag;
         }
 
-        public bool HSet(string cacheKey, string field, string cacheValue)
+        public bool HSet(string cacheKey, string field, object cacheValue)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullOrWhiteSpace(field, nameof(field));
@@ -58,7 +58,7 @@
             }
         }
 
-        public string HGet(string cacheKey, string field)
+        public object HGet(string cacheKey, string field)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullOrWhiteSpace(field, nameof(field));
@@ -67,11 +67,11 @@
             return res;
         }
 
-        public Dictionary<string, string> HGetAll(string cacheKey)
+        public Dictionary<string, object> HGetAll(string cacheKey)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
-            var res = _cache.HGetAll(cacheKey);
+            var res = _cache.HGetAll<object>(cacheKey);
             return res;
         }
 
@@ -98,21 +98,21 @@
             return _cache.HLen(cacheKey);
         }
 
-        public List<string> HVals(string cacheKey)
+        public List<object> HVals(string cacheKey)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
-            return _cache.HVals(cacheKey).ToList();
+            return _cache.HVals<object>(cacheKey).ToList();
         }
 
-        public Dictionary<string, string> HMGet(string cacheKey, IList<string> fields)
+        public Dictionary<string, object> HMGet(string cacheKey, IList<string> fields)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullAndCountGTZero(fields, nameof(fields));
 
-            var dict = new Dictionary<string, string>();
+            var dict = new Dictionary<string, object>();
 
-            var res = _cache.HMGet(cacheKey, fields.ToArray());
+            var res = _cache.HMGet<object>(cacheKey, fields.ToArray());
 
             for (int i = 0; i < fields.Count(); i++)
             {
@@ -125,7 +125,7 @@
             return dict;
         }
 
-        public async Task<bool> HMSetAsync(string cacheKey, Dictionary<string, string> vals, TimeSpan? expiration = null)
+        public async Task<bool> HMSetAsync(string cacheKey, Dictionary<string, object> vals, TimeSpan? expiration = null)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNull(vals, nameof(vals));
@@ -144,7 +144,7 @@
             return flag;
         }
 
-        public async Task<bool> HSetAsync(string cacheKey, string field, string cacheValue)
+        public async Task<bool> HSetAsync(string cacheKey, string field, object cacheValue)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullOrWhiteSpace(field, nameof(field));
@@ -174,7 +174,7 @@
             }
         }
 
-        public async Task<string> HGetAsync(string cacheKey, string field)
+        public async Task<object> HGetAsync(string cacheKey, string field)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullOrWhiteSpace(field, nameof(field));
@@ -183,11 +183,11 @@
             return res;
         }
 
-        public async Task<Dictionary<string, string>> HGetAllAsync(string cacheKey)
+        public async Task<Dictionary<string, object>> HGetAllAsync(string cacheKey)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
-            var res = await _cache.HGetAllAsync(cacheKey);
+            var res = await _cache.HGetAllAsync<object>(cacheKey);
             return res;
         }
 
@@ -214,19 +214,19 @@
             return await _cache.HLenAsync(cacheKey);
         }
 
-        public async Task<List<string>> HValsAsync(string cacheKey)
+        public async Task<List<object>> HValsAsync(string cacheKey)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
-            return (await _cache.HValsAsync(cacheKey)).ToList();
+            return (await _cache.HValsAsync<object>(cacheKey)).ToList();
         }
 
-        public async Task<Dictionary<string, string>> HMGetAsync(string cacheKey, IList<string> fields)
+        public async Task<Dictionary<string, object>> HMGetAsync(string cacheKey, IList<string> fields)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullAndCountGTZero(fields, nameof(fields));
 
-            var dict = new Dictionary<string, string>();
+            var dict = new Dictionary<string, object>();
 
             var res = await _cache.HMGetAsync(cacheKey, fields.ToArray());
 

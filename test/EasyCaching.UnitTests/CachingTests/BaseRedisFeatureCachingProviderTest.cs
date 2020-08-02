@@ -374,7 +374,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -394,7 +394,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -414,7 +414,7 @@
         {
             var cacheKey = $"{_nameSpace}-g-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"k1","v1"},{"k2","v2"}
             });
@@ -432,7 +432,7 @@
         {
             var cacheKey = $"{_nameSpace}-g-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"k1","v1"},{"k2","v2"}
             });
@@ -450,7 +450,7 @@
         {
             var cacheKey = $"{_nameSpace}-g-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"k1","v1"},{"k2","v2"}
             });
@@ -468,7 +468,7 @@
         {
             var cacheKey = $"{_nameSpace}-g-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"k1","v1"},{"k2","v2"}
             });
@@ -486,7 +486,7 @@
         {
             var cacheKey = $"{_nameSpace}-g-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -503,7 +503,7 @@
         {
             var cacheKey = $"{_nameSpace}-g-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -521,7 +521,7 @@
         {
             var cacheKey = $"{_nameSpace}-d-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"},{"a3","v3"}
             });
@@ -542,7 +542,7 @@
         {
             var cacheKey = $"{_nameSpace}-d-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"},{"a3","v3"}
             });
@@ -563,7 +563,7 @@
         {
             var cacheKey = $"{_nameSpace}-d-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"},{"a3","v3"}
             });
@@ -582,7 +582,7 @@
         {
             var cacheKey = $"{_nameSpace}-d-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"},{"a3","v3"}
             });
@@ -730,7 +730,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -753,7 +753,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -776,7 +776,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -796,7 +796,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -816,7 +816,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -835,7 +835,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -854,7 +854,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -873,7 +873,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             });
@@ -892,7 +892,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = _provider.HMSet(cacheKey, new Dictionary<string, string>
+            var res = _provider.HMSet(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             }, TimeSpan.FromSeconds(1));
@@ -912,7 +912,7 @@
         {
             var cacheKey = $"{_nameSpace}-{Guid.NewGuid().ToString()}";
 
-            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, string>
+            var res = await _provider.HMSetAsync(cacheKey, new Dictionary<string, object>
             {
                 {"a1","v1"},{"a2","v2"}
             }, TimeSpan.FromSeconds(1));

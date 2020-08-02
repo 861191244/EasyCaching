@@ -13,46 +13,55 @@
     /// </summary>
     public partial class DefaultRedisCachingProvider : IRedisCachingProvider
     {
-        public bool HMSet(string cacheKey, Dictionary<string, string> vals, TimeSpan? expiration = null)
+        public bool HMSet(string cacheKey, Dictionary<string, object> vals, TimeSpan? expiration = null)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
+            var list = new List<HashEntry>();
+
+            foreach (var item in vals)
+            {
+                if (item.Value.GetType().Equals(typeof(byte[])))
+                {
+                    list.Add(new HashEntry(item.Key, (byte[])item.Value));
+                }
+                else
+                {
+                    list.Add(new HashEntry(item.Key, item.Value.ToString()));
+                }
+            }
+
+            _cache.HashSet(cacheKey, list.ToArray());
+
+            var flag = true;
+
             if (expiration.HasValue)
             {
-                var list = new List<HashEntry>();
-
-                foreach (var item in vals)
-                {
-                    list.Add(new HashEntry(item.Key,item.Value));
-                }
-
-                _cache.HashSet(cacheKey, list.ToArray());
-
-                var flag = _cache.KeyExpire(cacheKey, expiration);
-
-                return flag;
+                flag = _cache.KeyExpire(cacheKey, expiration);
             }
-            else
-            {
-                var list = new List<HashEntry>();
 
-                foreach (var item in vals)
-                {
-                    list.Add(new HashEntry(item.Key, item.Value));
-                }
-
-                _cache.HashSet(cacheKey, list.ToArray());
-
-                return true;
-            }
+            return flag;
         }
 
-        public bool HSet(string cacheKey, string field, string cacheValue)
+        public bool HSet(string cacheKey, string field, object cacheValue)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullOrWhiteSpace(field, nameof(field));
 
-            return _cache.HashSet(cacheKey, field, cacheValue);
+            var list = new List<HashEntry>();
+
+            if (cacheValue.GetType().Equals(typeof(byte[])))
+            {
+                list.Add(new HashEntry(field, (byte[])cacheValue));
+            }
+            else
+            {
+                list.Add(new HashEntry(field, cacheValue.ToString()));
+            }
+
+            _cache.HashSet(cacheKey, list.ToArray());
+
+            return true;
         }
 
         public bool HExists(string cacheKey, string field)
@@ -69,7 +78,7 @@
 
             if (fields != null && fields.Any())
             {
-                return _cache.HashDelete(cacheKey, fields.Select(x=>(RedisValue)x).ToArray());
+                return _cache.HashDelete(cacheKey, fields.Select(x => (RedisValue)x).ToArray());
             }
             else
             {
@@ -78,7 +87,7 @@
             }
         }
 
-        public string HGet(string cacheKey, string field)
+        public object HGet(string cacheKey, string field)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullOrWhiteSpace(field, nameof(field));
@@ -87,17 +96,17 @@
             return res;
         }
 
-        public Dictionary<string, string> HGetAll(string cacheKey)
+        public Dictionary<string, object> HGetAll(string cacheKey)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
-            var dict = new Dictionary<string, string>();
+            var dict = new Dictionary<string, object>();
 
             var vals = _cache.HashGetAll(cacheKey);
 
             foreach (var item in vals)
             {
-                if(!dict.ContainsKey(item.Name)) dict.Add(item.Name, item.Value);
+                if (!dict.ContainsKey(item.Name)) dict.Add(item.Name, item.Value);
             }
 
             return dict;
@@ -116,7 +125,7 @@
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
             var keys = _cache.HashKeys(cacheKey);
-            return keys.Select(x=>x.ToString()).ToList();
+            return keys.Select(x => x.ToString()).ToList();
         }
 
         public long HLen(string cacheKey)
@@ -126,22 +135,22 @@
             return _cache.HashLength(cacheKey);
         }
 
-        public List<string> HVals(string cacheKey)
+        public List<object> HVals(string cacheKey)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
-            return _cache.HashValues(cacheKey).Select(x=>x.ToString()).ToList();
+            return _cache.HashValues(cacheKey).Select(x => (object)x).ToList();
         }
 
-        public Dictionary<string, string> HMGet(string cacheKey, IList<string> fields)
+        public Dictionary<string, object> HMGet(string cacheKey, IList<string> fields)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullAndCountGTZero(fields, nameof(fields));
 
-            var dict = new Dictionary<string, string>();
+            var dict = new Dictionary<string, object>();
 
-            var list = _cache.HashGet(cacheKey, fields.Select(x=>(RedisValue)x).ToArray());
-           
+            var list = _cache.HashGet(cacheKey, fields.Select(x => (RedisValue)x).ToArray());
+
             for (int i = 0; i < fields.Count(); i++)
             {
                 if (!dict.ContainsKey(fields[i]))
@@ -153,43 +162,54 @@
             return dict;
         }
 
-        public async Task<bool> HMSetAsync(string cacheKey, Dictionary<string, string> vals, TimeSpan? expiration = null)
+        public async Task<bool> HMSetAsync(string cacheKey, Dictionary<string, object> vals, TimeSpan? expiration = null)
         {
+            var list = new List<HashEntry>();
+
+            foreach (var item in vals)
+            {
+                if (item.Value.GetType().Equals(typeof(byte[])))
+                {
+                    list.Add(new HashEntry(item.Key, (byte[])item.Value));
+                }
+                else
+                {
+                    list.Add(new HashEntry(item.Key, item.Value.ToString()));
+                }
+            }
+
+            await _cache.HashSetAsync(cacheKey, list.ToArray());
+
+            var flag = true;
+
+
             if (expiration.HasValue)
             {
-                var list = new List<HashEntry>();
-
-                foreach (var item in vals)
-                {
-                    list.Add(new HashEntry(item.Key,item.Value));                    
-                }
-
-                await _cache.HashSetAsync(cacheKey, list.ToArray());
-
-                var flag = await _cache.KeyExpireAsync(cacheKey, expiration.Value);
-
-                return flag;
+                flag = await _cache.KeyExpireAsync(cacheKey, expiration.Value);
             }
-            else
-            {
-                var list = new List<HashEntry>();
 
-                foreach (var item in vals)
-                {
-                    list.Add(new HashEntry(item.Key, item.Value));
-                }
-
-                await _cache.HashSetAsync(cacheKey, list.ToArray());
-                return true;
-            }
+            return flag;
         }
 
-        public async Task<bool> HSetAsync(string cacheKey, string field, string cacheValue)
+        public async Task<bool> HSetAsync(string cacheKey, string field, object cacheValue)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullOrWhiteSpace(field, nameof(field));
 
-            return await _cache.HashSetAsync(cacheKey, field, cacheValue);
+            var list = new List<HashEntry>();
+
+            if (cacheValue.GetType().Equals(typeof(byte[])))
+            {
+                list.Add(new HashEntry(field, (byte[])cacheValue));
+            }
+            else
+            {
+                list.Add(new HashEntry(field, cacheValue.ToString()));
+            }
+
+            await _cache.HashSetAsync(cacheKey, list.ToArray());
+
+            return true;
         }
 
         public async Task<bool> HExistsAsync(string cacheKey, string field)
@@ -206,7 +226,7 @@
 
             if (fields != null && fields.Any())
             {
-                return await _cache.HashDeleteAsync(cacheKey, fields.Select(x=>(RedisValue)x).ToArray());
+                return await _cache.HashDeleteAsync(cacheKey, fields.Select(x => (RedisValue)x).ToArray());
             }
             else
             {
@@ -215,7 +235,7 @@
             }
         }
 
-        public async Task<string> HGetAsync(string cacheKey, string field)
+        public async Task<object> HGetAsync(string cacheKey, string field)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullOrWhiteSpace(field, nameof(field));
@@ -224,11 +244,11 @@
             return res;
         }
 
-        public async Task<Dictionary<string, string>> HGetAllAsync(string cacheKey)
+        public async Task<Dictionary<string, object>> HGetAllAsync(string cacheKey)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
-            var dict = new Dictionary<string, string>();
+            var dict = new Dictionary<string, object>();
 
             var vals = await _cache.HashGetAllAsync(cacheKey);
 
@@ -237,7 +257,7 @@
                 if (!dict.ContainsKey(item.Name)) dict.Add(item.Name, item.Value);
             }
 
-            return dict;          
+            return dict;
         }
 
         public async Task<long> HIncrByAsync(string cacheKey, string field, long val = 1)
@@ -253,7 +273,7 @@
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
             var keys = await _cache.HashKeysAsync(cacheKey);
-            return keys.Select(x=>x.ToString()).ToList();
+            return keys.Select(x => x.ToString()).ToList();
         }
 
         public async Task<long> HLenAsync(string cacheKey)
@@ -263,21 +283,21 @@
             return await _cache.HashLengthAsync(cacheKey);
         }
 
-        public async Task<List<string>> HValsAsync(string cacheKey)
+        public async Task<List<object>> HValsAsync(string cacheKey)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
 
-            return (await _cache.HashValuesAsync(cacheKey)).Select(x=>x.ToString()).ToList();
+            return (await _cache.HashValuesAsync(cacheKey)).Select(x => (object)x).ToList();
         }
 
-        public async Task<Dictionary<string, string>> HMGetAsync(string cacheKey, IList<string> fields)
+        public async Task<Dictionary<string, object>> HMGetAsync(string cacheKey, IList<string> fields)
         {
             ArgumentCheck.NotNullOrWhiteSpace(cacheKey, nameof(cacheKey));
             ArgumentCheck.NotNullAndCountGTZero(fields, nameof(fields));
 
-            var dict = new Dictionary<string, string>();
+            var dict = new Dictionary<string, object>();
 
-            var res = await _cache.HashGetAsync(cacheKey, fields.Select(x=>(RedisValue)x).ToArray());
+            var res = await _cache.HashGetAsync(cacheKey, fields.Select(x => (RedisValue)x).ToArray());
 
             for (int i = 0; i < fields.Count(); i++)
             {
